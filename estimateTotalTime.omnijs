@@ -1,0 +1,96 @@
+/*{
+	"type": "action",
+	"targets": ["omnifocus"],
+	"author": "Kaitlin Salzke",
+	"identifier": "com.KaitlinSalzke.estimateTotalTime",
+	"version": "1.0",
+	"description": "Estimates the total time of the selected items",
+	"label": "Estimate Total Time",
+	"shortLabel": "Estimate Total Time"
+}*/
+(() => {
+  var action = new PlugIn.Action(function (selection, sender) {
+    totalTime = 0;
+    noEstimate = [];
+
+    function accumulate(task) {
+      if (task.estimatedMinutes === null) {
+        console.log("pushing: " + task.name + task.estimatedMinutes);
+        noEstimate.push(task.name);
+      }
+      totalTime += task.estimatedMinutes;
+    }
+
+    selection.projects.forEach(function (project) {
+      project.task.apply((task) => {
+        if (
+          !task.hasChildren &&
+          task.taskStatus !== Task.Status.Dropped &&
+          task.taskStatus !== Task.Status.Completed
+        ) {
+          accumulate(task);
+        }
+      });
+    });
+
+    selection.tasks.forEach(accumulate);
+
+    selection.tags.forEach(function (tag) {
+      // 'remainingTasks' not used as there is currently an OF bug - this returns available tasks only
+      tag.tasks.forEach((task) => {
+        if (
+          task.taskStatus !== Task.Status.Dropped &&
+          task.taskStatus !== Task.Status.Completed
+        ) {
+          accumulate(task);
+        }
+      });
+    });
+
+    showEstimatedTimes(totalTime, noEstimate);
+  });
+
+  action.validate = function (selection, sender) {
+    var conditionsArray = [
+      eval(selection.tasks.length > 0),
+      eval(selection.projects.length > 0),
+      eval(selection.tags.length > 0),
+    ];
+    return conditionsArray.includes(true);
+  };
+
+  return action;
+})();
+
+function showEstimatedTimes(totalTime, tasksWithNoEstimate) {
+  hours = Math.floor(totalTime / 60);
+  minutes = totalTime % 60;
+
+  // build string to show estimate of total time
+  if (hours == 0) {
+    timeString = minutes + " minutes";
+  } else {
+    timeString = hours + " hours " + minutes + " minutes";
+  }
+
+  switch (tasksWithNoEstimate.length) {
+    case 0:
+      warning = "";
+      break;
+    case 1:
+      warning =
+        "Note that the following task has no estimate: " +
+        tasksWithNoEstimate[0];
+      break;
+    default:
+      warning =
+        "Note that the following " +
+        tasksWithNoEstimate.length +
+        " tasks have no estimate: " +
+        tasksWithNoEstimate.join(", ");
+  }
+
+  // show result
+  alert = new Alert("Estimated total time: " + timeString, warning);
+  alert.show();
+}
