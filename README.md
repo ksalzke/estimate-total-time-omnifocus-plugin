@@ -27,7 +27,7 @@ This action totals the estimated duration of the selected items, and displays th
 The total includes any of the following that are selected:
 
 | Selection  | Amounts included in total                                                           |
-| ---------- | ----------------------------------------------------------------------------------- |
+| ---------- | :---------------------------------------------------------------------------------- |
 | Task(s)    | The selected task(s)                                                                |
 | Project(s) | Any remaining tasks belonging to the project (that do not have children themselves) |
 | Tag(s)     | Any remaining tasks which have the selected tag(s)                                  |
