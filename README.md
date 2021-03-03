@@ -10,11 +10,9 @@ None so far! 🤞
 
 # Installation & Set-Up
 
-(For instructions on getting started with Omni Automation, see [here](https://kaitlinsalzke.com/how-to/how-to-add-a-omnijs-plug-in-to-omnifocus-and-assign-a-keyboard-shortcut/).)
-
-1. Click on the green `Clone or download` button above to download a `.zip` file of the file in this GitHub repository.
+1. Click on the green "Code" button above, and then click "Download ZIP".
 2. Unzip the downloaded file.
-3. Move the `.omnifocusjs` file to your OmniFocus plug-in library folder.
+3. Install the `.omnifocusjs` file according to [Omni Automation: Installing Plug-Ins](https://omni-automation.com/plugins/installation.html).
 
 # Actions
 
