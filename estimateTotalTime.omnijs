@@ -15,7 +15,7 @@
 
     function accumulate(task) {
       if (task.estimatedMinutes === null) {
-        console.log("pushing: " + task.name + task.estimatedMinutes);
+        console.log("pushing: " + task.name);
         noEstimate.push(task.name);
       }
       totalTime += task.estimatedMinutes;
