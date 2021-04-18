@@ -15,7 +15,6 @@
 
     function accumulate(task) {
       if (task.estimatedMinutes === null) {
-        console.log("pushing: " + task.name + task.estimatedMinutes);
         noEstimate.push(task.name);
       }
       totalTime += task.estimatedMinutes;
@@ -67,10 +66,15 @@ function showEstimatedTimes(totalTime, tasksWithNoEstimate) {
   minutes = totalTime % 60;
 
   // build string to show estimate of total time
+  hoursUnit = (hours == 1) ? "hour" : "hours";
+  minutesUnit = (minutes == 1) ? "minute" : "minutes";
   if (hours == 0) {
-    timeString = minutes + " minutes";
+    timeString = minutes + " " + minutesUnit;
+  } else if (minutes == 0) {
+    timeString = hours + " " + hoursUnit;
   } else {
-    timeString = hours + " hours " + minutes + " minutes";
+    timeString =
+      hours + " " + hoursUnit + " and " + minutes + " " + minutesUnit;
   }
 
   switch (tasksWithNoEstimate.length) {
@@ -79,18 +83,41 @@ function showEstimatedTimes(totalTime, tasksWithNoEstimate) {
       break;
     case 1:
       warning =
-        "Note that the following task has no estimate: " +
-        tasksWithNoEstimate[0];
+        "Note that the following task has no estimate: \u201C" +
+        tasksWithNoEstimate[0] +
+        "\u201D.";
+      break;
+    case 2:
+      warning =
+        "Note that the following 2 tasks have no estimate: \u201C" +
+        tasksWithNoEstimate[0] +
+        "\u201D and \u201C" +
+        tasksWithNoEstimate[1] +
+        "\u201D.";
       break;
     default:
       warning =
         "Note that the following " +
         tasksWithNoEstimate.length +
-        " tasks have no estimate: " +
-        tasksWithNoEstimate.join(", ");
+        " tasks have no estimate: ";
+      tasksWithNoEstimate.forEach(function(item, index, array) {
+        if (index != 0) {
+          warning += ", ";
+        }
+        if (index == array.length - 1) {
+          warning += "and ";
+        }
+        warning +=
+          "\u201C" +
+          item +
+          "\u201D";
+        if (index == array.length - 1) {
+          warning += ".";
+        }
+      });
   }
 
   // show result
-  alert = new Alert("Estimated total time: " + timeString, warning);
+  alert = new Alert("Estimated total time: " + timeString + ".", warning);
   alert.show();
 }
