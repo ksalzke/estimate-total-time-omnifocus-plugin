@@ -1,23 +1,25 @@
+/* global PlugIn Task Alert */
 /*{
-	"type": "action",
-	"targets": ["omnifocus"],
-	"author": "Kaitlin Salzke",
-	"identifier": "com.KaitlinSalzke.estimateTotalTime",
-	"version": "1.0",
-	"description": "Estimates the total time of the selected items",
-	"label": "Estimate Total Time",
-	"shortLabel": "Estimate Total Time"
+"type": "action",
+"targets": ["omnifocus"],
+"author": "Kaitlin Salzke",
+"identifier": "com.KaitlinSalzke.estimateTotalTime",
+"version": "1.0",
+"description": "Estimates the total time of the selected items",
+"label": "Estimate Total Time",
+"shortLabel": "Estimate Total Time"
 }*/
-(() => {
-  var action = new PlugIn.Action(function (selection, sender) {
-    totalTime = 0;
-    noEstimate = [];
 
-    function accumulate(task) {
+(() => {
+  const action = new PlugIn.Action(function (selection, sender) {
+    let totalTime = 0
+    const noEstimate = []
+
+    function accumulate (task) {
       if (task.estimatedMinutes === null) {
-        noEstimate.push(task.name);
+        noEstimate.push(task.name)
       }
-      totalTime += task.estimatedMinutes;
+      totalTime += task.estimatedMinutes
     }
 
     selection.projects.forEach(function (project) {
@@ -27,12 +29,12 @@
           task.taskStatus !== Task.Status.Dropped &&
           task.taskStatus !== Task.Status.Completed
         ) {
-          accumulate(task);
+          accumulate(task)
         }
-      });
-    });
+      })
+    })
 
-    selection.tasks.forEach(accumulate);
+    selection.tasks.forEach(accumulate)
 
     selection.tags.forEach(function (tag) {
       // 'remainingTasks' not used as there is currently an OF bug - this returns available tasks only
@@ -41,83 +43,80 @@
           task.taskStatus !== Task.Status.Dropped &&
           task.taskStatus !== Task.Status.Completed
         ) {
-          accumulate(task);
+          accumulate(task)
         }
-      });
-    });
+      })
+    })
 
-    showEstimatedTimes(totalTime, noEstimate);
-  });
+    showEstimatedTimes(totalTime, noEstimate)
+  })
 
   action.validate = function (selection, sender) {
-    var conditionsArray = [
-      eval(selection.tasks.length > 0),
-      eval(selection.projects.length > 0),
-      eval(selection.tags.length > 0),
-    ];
-    return conditionsArray.includes(true);
-  };
-
-  return action;
-})();
-
-function showEstimatedTimes(totalTime, tasksWithNoEstimate) {
-  hours = Math.floor(totalTime / 60);
-  minutes = totalTime % 60;
-
-  // build string to show estimate of total time
-  hoursUnit = (hours == 1) ? "hour" : "hours";
-  minutesUnit = (minutes == 1) ? "minute" : "minutes";
-  if (hours == 0) {
-    timeString = minutes + " " + minutesUnit;
-  } else if (minutes == 0) {
-    timeString = hours + " " + hoursUnit;
-  } else {
-    timeString =
-      hours + " " + hoursUnit + " and " + minutes + " " + minutesUnit;
+    return selection.tasks.length > 0 || selection.projects.length > 0 || selection.tags.length > 0
   }
 
+  return action
+})()
+
+function showEstimatedTimes (totalTime, tasksWithNoEstimate) {
+  const hours = Math.floor(totalTime / 60)
+  const minutes = totalTime % 60
+
+  // build string to show estimate of total time
+  const hoursUnit = (hours === 1) ? 'hour' : 'hours'
+  const minutesUnit = (minutes === 1) ? 'minute' : 'minutes'
+  let timeString
+  if (hours === 0) {
+    timeString = minutes + ' ' + minutesUnit
+  } else if (minutes === 0) {
+    timeString = hours + ' ' + hoursUnit
+  } else {
+    timeString =
+      hours + ' ' + hoursUnit + ' and ' + minutes + ' ' + minutesUnit
+  }
+
+  let warning
   switch (tasksWithNoEstimate.length) {
     case 0:
-      warning = "";
-      break;
+      warning = ''
+      break
     case 1:
       warning =
-        "Note that the following task has no estimate: \u201C" +
+        'Note that the following task has no estimate: \u201C' +
         tasksWithNoEstimate[0] +
-        "\u201D.";
-      break;
+        '\u201D.'
+      break
     case 2:
       warning =
-        "Note that the following 2 tasks have no estimate: \u201C" +
+        'Note that the following 2 tasks have no estimate: \u201C' +
         tasksWithNoEstimate[0] +
-        "\u201D and \u201C" +
+        '\u201D and \u201C' +
         tasksWithNoEstimate[1] +
-        "\u201D.";
-      break;
+        '\u201D.'
+      break
     default:
       warning =
-        "Note that the following " +
+        'Note that the following ' +
         tasksWithNoEstimate.length +
-        " tasks have no estimate: ";
-      tasksWithNoEstimate.forEach(function(item, index, array) {
-        if (index != 0) {
-          warning += ", ";
+        ' tasks have no estimate: '
+      tasksWithNoEstimate.forEach(function (item, index, array) {
+        if (index !== 0) {
+          warning += ', '
         }
-        if (index == array.length - 1) {
-          warning += "and ";
+        if (index === array.length - 1) {
+          warning += 'and '
         }
         warning +=
-          "\u201C" +
+          '\u201C' +
           item +
-          "\u201D";
-        if (index == array.length - 1) {
-          warning += ".";
+          '\u201D'
+        if (index === array.length - 1) {
+          warning += '.'
         }
-      });
+      })
   }
 
   // show result
-  alert = new Alert("Estimated total time: " + timeString + ".", warning);
-  alert.show();
+  const alert = new Alert('Estimated total time: ' + timeString + '.', warning)
+  alert.show()
 }
