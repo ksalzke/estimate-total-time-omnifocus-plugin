@@ -1,4 +1,5 @@
 /* global PlugIn Task Alert */
+/* eslint spaced-comment: ["error", "always", { "exceptions": ["{"] }] */
 /*{
 "type": "action",
 "targets": ["omnifocus"],
@@ -12,42 +13,40 @@
 
 (() => {
   const action = new PlugIn.Action(function (selection, sender) {
-    let totalTime = 0
-    const noEstimate = []
 
-    function accumulate (task) {
+    // build list of tasks to include
+
+    const tasksToInclude = new Set()
+
+    if (selection.projects.length > 0) {
+      selection.projects.forEach(project => {
+        project.flattenedChildren
+          .filter(task => !task.hasChildren && task.taskStatus !== Task.Status.Dropped && task.taskStatus !== Task.Status.Completed)
+          .forEach(task => tasksToInclude.add(task))
+      })
+    }
+
+
+    if (selection.tasks.length > 0) {
+      selection.tasks.forEach(task => tasksToInclude.add(task))
+    }
+
+    if (selection.tags.length > 0) {
+      selection.tags.forEach(tag => tag.remainingTasks.forEach(task => tasksToInclude.add(task)))
+    }
+
+    // find tasks with no estimate and calculate total time
+    const noEstimate = []
+    let totalTime = 0
+
+    tasksToInclude.forEach(task => {
       if (task.estimatedMinutes === null) {
         noEstimate.push(task.name)
       }
       totalTime += task.estimatedMinutes
-    }
-
-    selection.projects.forEach(function (project) {
-      project.task.apply((task) => {
-        if (
-          !task.hasChildren &&
-          task.taskStatus !== Task.Status.Dropped &&
-          task.taskStatus !== Task.Status.Completed
-        ) {
-          accumulate(task)
-        }
-      })
     })
 
-    selection.tasks.forEach(accumulate)
-
-    selection.tags.forEach(function (tag) {
-      // 'remainingTasks' not used as there is currently an OF bug - this returns available tasks only
-      tag.tasks.forEach((task) => {
-        if (
-          task.taskStatus !== Task.Status.Dropped &&
-          task.taskStatus !== Task.Status.Completed
-        ) {
-          accumulate(task)
-        }
-      })
-    })
-
+    // show details
     showEstimatedTimes(totalTime, noEstimate)
   })
 
