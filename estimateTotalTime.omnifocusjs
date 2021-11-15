@@ -5,10 +5,11 @@
 "targets": ["omnifocus"],
 "author": "Kaitlin Salzke",
 "identifier": "com.KaitlinSalzke.estimateTotalTime",
-"version": "1.0",
+"version": "1.0.1",
 "description": "Estimates the total time of the selected items",
 "label": "Estimate Total Time",
-"shortLabel": "Estimate Total Time"
+"shortLabel": "Estimate Total Time",
+"image": "deskclock.fill"
 }*/
 
 (() => {
