@@ -6,13 +6,15 @@ _Please note that all scripts on my GitHub account (or shared elsewhere) are wor
 
 ## Known issues
 
+Refer to ['issues'](https://github.com/ksalzke/estimate-total-time-omnifocus-plugin/issues) for known issues and planned changes/enhancements.
+
 None so far! 🤞
 
 # Installation & Set-Up
 
-1. Click on the green "Code" button above, and then click "Download ZIP".
+1. Download the [latest release](https://github.com/ksalzke/estimate-total-time-omnifocus-plugin/releases/latest).
 2. Unzip the downloaded file.
-3. Install the `.omnifocusjs` file according to [Omni Automation: Installing Plug-Ins](https://omni-automation.com/plugins/installation.html).
+3. Move the `.omnifocusjs` file to your OmniFocus plug-in library folder (or open it to install).
 
 # Actions
 
