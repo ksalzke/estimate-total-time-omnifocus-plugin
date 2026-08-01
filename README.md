@@ -10,11 +10,11 @@ Refer to ['issues'](https://github.com/ksalzke/estimate-total-time-omnifocus-plu
 
 None so far! 🤞
 
-# Installation & Set-Up
+## Installation
 
-1. Download the [latest release](https://github.com/ksalzke/estimate-total-time-omnifocus-plugin/releases/latest).
-2. Unzip the downloaded file.
-3. Move the `.omnifocusjs` file to your OmniFocus plug-in library folder (or open it to install).
+[![Install in OmniFocus](https://img.shields.io/badge/OmniFocus-Install-5E5CE6?style=flat-square)](https://ksalzke.github.io/omnifocus-plugin-installer/?repo=estimate-total-time-omnifocus-plugin)
+
+Select **Install** above, then follow the prompts.
 
 # Actions
 
